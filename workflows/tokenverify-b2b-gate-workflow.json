@@ -1,0 +1,74 @@
+{
+  "name": "TokenVerify B2B Checkout VAT & Email Gate",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e4f8d2a1-1c3b-4a5e-8f9d-0b1c2d3e4f5a",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "email": "billing@sap.de",
+        "additionalOptions": {
+          "tax_id": "DE143454790",
+          "country_code": "DE"
+        }
+      },
+      "id": "8a7b6c5d-4e3f-2a1b-0c9d-8e7f6a5b4c3d",
+      "name": "TokenVerify",
+      "type": "n8n-nodes-tokenverify.tokenVerify",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Determine if lead is approved for VAT exemption\nconst result = $input.first().json;\nconst isApproved = result.verdict === 'ALLOW' && result.checks?.tax?.checksum_valid;\nreturn [{\n  json: {\n    verdict: result.verdict,\n    trustScore: result.trust_score,\n    taxChecksumValid: Boolean(result.checks?.tax?.checksum_valid),\n    isDisposableEmail: Boolean(result.checks?.email?.is_disposable),\n    action: isApproved ? 'APPLY_ZERO_RATE_VAT' : 'CHARGE_STANDARD_VAT'\n  }\n}];"
+      },
+      "id": "5f4e3d2c-1b0a-9f8e-7d6c-5b4a3f2e1d0c",
+      "name": "Tax Decision Logic",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "TokenVerify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TokenVerify": {
+      "main": [
+        [
+          {
+            "node": "Tax Decision Logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

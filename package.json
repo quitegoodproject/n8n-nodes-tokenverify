@@ -1,0 +1,49 @@
+{
+  "name": "n8n-nodes-tokenverify",
+  "version": "0.1.0",
+  "description": "n8n community node for sub-50ms European VAT checksum validation, disposable email detection, and B2B checkout trust verification.",
+  "keywords": [
+    "n8n-community-node-package",
+    "tokenverify",
+    "vat-validation",
+    "tax-checksum",
+    "b2b-verification",
+    "fraud-prevention",
+    "disposable-email",
+    "ai-agents"
+  ],
+  "license": "MIT",
+  "homepage": "https://tokenverifyapi.com",
+  "author": {
+    "name": "The Quite Good Project",
+    "email": "engineering@quitegoodproject.com",
+    "url": "https://quitegoodproject.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quitegoodproject/n8n-nodes-tokenverify.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && node scripts/copy-assets.js",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/TokenVerifyApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/TokenVerify/TokenVerify.node.js"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "n8n-workflow": "^1.70.0",
+    "typescript": "^5.6.3"
+  }
+}
